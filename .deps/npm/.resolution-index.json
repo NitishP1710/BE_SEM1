@@ -1,0 +1,10 @@
+{
+  "bank.sol": {
+    "__sources__": {
+      "bank.sol": {
+        "content": "\n// SPDX-License-Identifier: MIT\npragma solidity ^0.8.38;\n\ncontract Bank {\n\n    mapping(address => uint256) public balances;\n\n    event Deposited(address indexed user, uint256 amount);\n    event Withdrawn(address indexed user, uint256 amount);\n\n    // Deposit ETH into bank\n    function deposit() public payable {\n        require(msg.value > 0, \"Amount must be greater than zero\");\n\n        balances[msg.sender] += msg.value;\n\n        emit Deposited(msg.sender, msg.value);\n    }\n\n    // Withdraw ETH from bank\n    function withdraw(uint256 amount) public {\n        require(amount > 0, \"Amount must be greater than zero\");\n        require(balances[msg.sender] >= amount, \"Insufficient balance\");\n\n        balances[msg.sender] -= amount;\n\n        (bool success, ) = payable(msg.sender).call{value: amount}(\"\");\n\n        require(success, \"Transfer failed\");\n\n        emit Withdrawn(msg.sender, amount);\n    }\n\n    // Display account balance\n    function getBalance(address user) public view returns (uint256) {\n        return balances[user];\n    }\n}\n",
+        "file": "bank.sol"
+      }
+    }
+  }
+}
